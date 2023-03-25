@@ -1,6 +1,5 @@
 FROM ubuntu:latest
 
-# Preconfigure tzdata package
 RUN apt-get update && \
     apt-get install -y debconf-utils && \
     echo "tzdata tzdata/Areas select Etc" | debconf-set-selections && \

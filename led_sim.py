@@ -1,14 +1,8 @@
 import tkinter as tk
 import time
 
-"""
-def toggle_led():
-    if canvas.itemcget(led, "fill") == "red":
-        canvas.itemconfig(led, fill="gray")
-    else:
-        canvas.itemconfig(led, fill="red")
-    root.after(1000, toggle_led)
-"""
+def change_led_color(led, color):
+    canvas.itemconfig(led, fill=color)
 
 root = tk.Tk()
 root.title("LED Simulator")
@@ -26,5 +20,8 @@ led7 = canvas.create_oval(950, 150, 1050, 250, fill="gray")
 led8 = canvas.create_oval(1100, 150, 1200, 250, fill="gray")
 led9 = canvas.create_oval(1250, 150, 1350, 250, fill="gray")
 
-#toggle_led(led1, led2)
+change_led_color(led1, "red")
+change_led_color(led2, "green")
+change_led_color(led3, "yellow")
+
 root.mainloop()
