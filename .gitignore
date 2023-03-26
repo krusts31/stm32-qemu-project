@@ -408,3 +408,5 @@ poetry.toml
 pyrightconfig.json
 
 # End of https://www.toptal.com/developers/gitignore/api/vim,visualstudiocode,linux,windows,macos,c++,zsh,git,c,python
+sdkconfig  sdkconfig.old
+build
