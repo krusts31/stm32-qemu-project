@@ -1,43 +1,45 @@
 #include <stdio.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
-#include "esp_system.h"
-#include "esp_spi_flash.h"
 #include "driver/gpio.h"
 
-#define LED_GPIO_PIN 2 // Change this to the GPIO pin number connected to your LED
-#define FLASH_DELAY_MS 100 // Time in milliseconds for LED flash duration
-#define PAUSE_DELAY_MS 10000 // Time in milliseconds for pause duration
-#define FLASH_COUNT 10 // Number of flashes
+#define NUM_LEDS 4
+const uint8_t LED_GPIO_PINS[NUM_LEDS] = {5, 4, 0, 2}; // OUTPUT LEDS
+//14, 12, 13, 15, 3, 1
 
-void app_main()
-{
-    printf("Hello world!\n");
+//D1 == GPIO5
+//D2 == GPIO4
+//D3 == GPIO0
+//D4 == GPIO2
 
-    /* Print chip information */
-    esp_chip_info_t chip_info;
-    esp_chip_info(&chip_info);
-    printf("This is ESP8266 chip with %d CPU cores, WiFi, ",
-            chip_info.cores);
+void  led_loop() {
+  int button_pres = 0;
+  int i = 0;
+  int direction = 1;
 
-    printf("silicon revision %d, ", chip_info.revision);
+  while (1) {
+      gpio_set_level(LED_GPIO_PINS[i], 1);
+      vTaskDelay(200 / portTICK_PERIOD_MS);
+      gpio_set_level(LED_GPIO_PINS[i], 0);
+      button_pres++;
+      if (direction > 0) {
+          i++;
+          if (i == 4)
+            i = 0;
+      } else {
+          i--;
+          if (i == -1)
+            i = 3;
+      }
+      if (button_pres % 15 == 0) {
+        direction = -direction;
+      }
+  }
+}
 
-    printf("%dMB %s flash\n", spi_flash_get_chip_size() / (1024 * 1024),
-            (chip_info.features & CHIP_FEATURE_EMB_FLASH) ? "embedded" : "external");
-
-    // Configure the LED GPIO pin as output
-    gpio_set_direction(LED_GPIO_PIN, GPIO_MODE_OUTPUT);
-
-    while (1) {
-        // Flash the LED 10 times
-        for (int i = 0; i < FLASH_COUNT; i++) {
-            gpio_set_level(LED_GPIO_PIN, 1); // LED on
-            vTaskDelay(FLASH_DELAY_MS / portTICK_PERIOD_MS);
-            gpio_set_level(LED_GPIO_PIN, 0); // LED off
-            vTaskDelay(FLASH_DELAY_MS / portTICK_PERIOD_MS);
-        }
-
-        // Pause for 10 seconds
-        vTaskDelay(PAUSE_DELAY_MS / portTICK_PERIOD_MS);
+void app_main() {
+    for (int i = 0; i < NUM_LEDS; i++) {
+        gpio_set_direction(LED_GPIO_PINS[i], GPIO_MODE_OUTPUT);
     }
+    led_loop();
 }
