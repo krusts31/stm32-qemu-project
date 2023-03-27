@@ -24,7 +24,6 @@ typedef struct s_pins {
 
 static void  led_loop(const t_pins pins) {
   while (1) {
-     gpio_set_level(pins.D8, 1);
      int input_state = gpio_get_level(pins.D4);
      if (input_state) {
        gpio_set_level(pins.TX, 1);
