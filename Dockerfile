@@ -8,3 +8,9 @@ RUN apt-get update && \
 RUN ln -s /usr/bin/python2 /usr/bin/python
 
 RUN git clone --recursive https://github.com/krusts31/stm32-qemu-project
+
+RUN /stm32-qemu-project/ESP8266_RTOS_SDK/install.sh
+
+COPY install.sh install.sh
+
+ENTRYPOINT ["bash", "install.sh"]
